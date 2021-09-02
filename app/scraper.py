@@ -144,15 +144,15 @@ def convert_str_to_number(x):
 
 
 if __name__ == "__main__":
-    start_time = time.time()
+    start_time = datetime.datetime.now()
     client = Connection()
     client.__enter__()
     logger.info(f"Starting Updating Database .Start time: {start_time}")
 
     if execute_job(10) is True:
+        end = datetime.datetime.now()
         logger.info(
-            f"Updating Database jobs has been successfully completed . Complete time: " + "--- %s seconds ---" % (
-                    time.time() - start_time))
+            f"Updating Database jobs has been successfully completed . Execution time: {end - start_time}")
     else:
         logger.info("Something going Wrong. Unable to update database")
 
