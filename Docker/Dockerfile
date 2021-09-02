@@ -10,7 +10,7 @@ RUN pip install -r /tmp/requirements.txt
 # Install cron
 RUN apt-get update && apt-get install -y cron
 
-ADD scripts/entrypoint.sh /entrypoint.sh
+ADD Docker/scripts/entrypoint.sh /entrypoint.sh
 
 RUN chmod +x  /entrypoint.sh
 

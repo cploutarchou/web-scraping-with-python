@@ -1,15 +1,7 @@
-import json
-import time
-
-from dash import Dash
-import dash_core_components as dcc
-import dash_html_components as html
+import datetime
 import logging
 import graypy
-import pandas as pd
 from mongoengine import StringField, DateTimeField, Document, IntField, errors, connect, ListField
-import plotly.graph_objects as go
-import plotly.express as px
 
 """
    Setup the logger
@@ -78,7 +70,6 @@ def insert_entry(data: dict, ):
                 logger.error(f"Unable to save entry to db . Error {e.__str__()}")
         else:
             res = False
-            logger.info(f"Post id {data['post_id']} already exist to database.")
     else:
         res = None
         logger.info("No Valid data required_fields is missing.")
@@ -120,7 +111,7 @@ def get_all_data():
     try:
         client.__enter__()
         q_set = Posts.objects().as_pymongo()
-        posts = [user for user in q_set._iter_results()]
+        posts = [post for post in q_set._iter_results()]
         client.__exit__()
         data = posts
         return data
@@ -129,31 +120,36 @@ def get_all_data():
         return data
 
 
-def posts_perday(weeks_number=1):
-    data = get_all_data()
-
-    df = pd.DataFrame(data)
-    df["date"] = pd.to_datetime(df["created_at"]).dt.date
-    df1 = df.groupby(['date']).count()
-    print(df1)
-    # df['id'] = df.index
-    # df.index.name = "id"
-    # colors = px.colors.qualitative.Plotly
-    #
-    # fig = go.Figure()
-    # app = Dash('DailyGrowth')
-    #
-    # trace1 = go.Bar(x=df["id"], y=df['daily new cases'], name='New cases')
-    # trace2 = go.Bar(x=df["id"], y=df['daily tests performed'], name='Test performed')
-    # trace3 = go.Bar(x=df["id"], y=df['daily deaths'], name='Deaths')
-    #
-    # app.layout = html.Div(children=[
-    #     dcc.Graph(
-    #         id='DailyGrowth_graph',
-    #         figure={
-    #             'data': [trace1, trace2, trace3],
-    #             'layout':
-    #                 go.Layout(barmode='stack')
-    #         },
-    #     )
-    # ])
+def posts_perday():
+    client.__enter__()
+    pipeline = [
+        {"$group":
+             {"_id":
+                  {"day": {"$dayOfMonth": "$created_at"},
+                   "month": {"$month": "$created_at"},
+                   "year": {"$year": "$created_at"}
+                   },
+              "count": {"$sum": 1},
+              "date": {'$first': "$created_at"}
+              }
+         }, {
+            "$project":
+                {
+                    "date":
+                        {
+                            "$dateToString": {"format": "%Y-%m-%d", "date": "$date"}
+                        },
+                    "count": 1,
+                    "_id": 0
+                }
+        }
+    ]
+    data = Posts.objects().aggregate(pipeline=pipeline)
+    final_data = []
+    today = datetime.date.today()
+    week_ago = today - datetime.timedelta(days=7)
+    for i in data:
+        date_time_obj = datetime.datetime.strptime(i['date'], '%Y-%m-%d').date()
+        if date_time_obj > week_ago:
+            final_data.append({'date': i['date'], 'count': i['count']})
+    return final_data

@@ -65,7 +65,7 @@ def extract_data(html):
     question_hyperlink = f"{BASE_URL}{question.find('a', {'class': 'question-hyperlink'})['href']}"
     title = question.find('a', {'class': 'question-hyperlink'}).text
     content = question.find('div', {'class': 'excerpt'}).text
-    content = " ".join(content.split()).encode('utf-8')
+    content = " ".join(content.split())
     user = question.find('div', {'class': 'user-details'}).find('a').text
     asked = question.find('span', {'class': 'relativetime'})['title'][0:-1]
     # convert date string to datetime object
@@ -99,6 +99,7 @@ def execute_job(pages: int = 1):
         for n in range(1, pages + 1):
             logger.info(f"Gathering data . Page no{n}")
             questions = fetch_questions(page=n)
+            time.sleep(15)
             page_questions = [extract_data(question) for question in questions]
             final_data.extend(page_questions)
     logger.info(f"Found {len(final_data)} questions.")
@@ -149,7 +150,7 @@ if __name__ == "__main__":
     client.__enter__()
     logger.info(f"Starting Updating Database .Start time: {start_time}")
 
-    if execute_job(10) is True:
+    if execute_job(500) is True:
         end = datetime.datetime.now()
         logger.info(
             f"Updating Database jobs has been successfully completed . Execution time: {end - start_time}")
