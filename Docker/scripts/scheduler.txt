@@ -1,0 +1,1 @@
+*/30 * * * * python3 /app/scraper.py    # every hour at 10"
