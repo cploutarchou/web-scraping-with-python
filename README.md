@@ -1,4 +1,4 @@
-# stackoverflow-scraper-using-python
+# StackOverflow-scraper-using-python
 A simple scraper app for StackOverflow using MongoDB.
 
 ## How to Run
@@ -15,14 +15,14 @@ A simple scraper app for StackOverflow using MongoDB.
 * Usename : admin
 * password : admin
 
-To be able to receives application log to Graylog you need to make the followings
+To be able to receive application logs to Graylog you need to make the followings
 1. Create one GelfTCP input stream
    1. Click on System/inputs/gelf
    2. Select Gelf TCP from the dropdown 
    3. Click on Launch new input 
-   4. Just add a Title for the input 
+   4. add a Title for the input 
    5. Click save
-   6. Now you can access application log by Click on Show Received Messages
+   6. Now, you can access the application log by Click on Show Received Messages
 
 ## Application UI:
 * Url : http://172.21.0.25
@@ -40,8 +40,7 @@ if is required to update cron job run you can edit the followings:
 
 
 ## Important notes
-* The application by default fetch the first 10 pages from StackOverflow every 30 minutes.
-A cron job run the scraper and update the application database.
+* The application, by default, fetches the first ten pages from StackOverflow every 30 minutes.
+A cron job runs the scraper and updates the application database.
 
-* If is required to fetch more pages you can update the passed parameters of method execute_job() from 10 to any other 
-value between 10 and 1000 the file in located on app/scraper.py
+* It is required to fetch more pages. You can update the passed parameters of method execute_job() from 10 to any other value between 10 and 1000. The file is located on app/scraper.py
