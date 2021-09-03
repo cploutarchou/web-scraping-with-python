@@ -13,11 +13,3 @@ docker-compose up -d
 echo "###################################################"
 echo "#    INFRASTRUCTURE SUCCESSFULLY STARTED          #"
 echo "###################################################"
-echo "###################################################"
-echo "#     Stating process config mongodb servers      #"
-echo "###################################################"
-sleep 20
-docker-compose exec -T mongodb sh -c "mongo -u admin -p admin < /scripts/init_db.js"
-echo "###################################################"
-echo "#     mongodb servers successfully cofigured      #"
-echo "###################################################"
