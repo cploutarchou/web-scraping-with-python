@@ -16,7 +16,7 @@ logger.addHandler(handler)
 class Connection:
     def __enter__(self):
         self.conn = connect(
-            host="mongodb://admin:admin@172.21.0.20:27017/hexatone?authSource=admin&directConnection=true&ssl=false")
+            host="mongodb://admin:admin@172.21.0.20:27017/webscrapper?authSource=admin&directConnection=true&ssl=false")
         return self.conn
 
     def __exit__(self):

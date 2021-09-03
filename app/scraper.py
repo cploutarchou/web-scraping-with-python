@@ -60,7 +60,6 @@ def extract_data(html):
     count = str(question.find("span", {"class": "vote-count-post"}).text)
     answers = int(question.find("div", {"class": "status"}).find("strong").text)
     view = str(question.find("div", {"class": "views"}).text.strip().split("views")[0]).upper().strip()
-    print(view)
     views = convert_str_to_number(view)
     question_hyperlink = f"{BASE_URL}{question.find('a', {'class': 'question-hyperlink'})['href']}"
     title = question.find('a', {'class': 'question-hyperlink'}).text
@@ -150,7 +149,7 @@ if __name__ == "__main__":
     client.__enter__()
     logger.info(f"Starting Updating Database .Start time: {start_time}")
 
-    if execute_job(500) is True:
+    if execute_job(10) is True:
         end = datetime.datetime.now()
         logger.info(
             f"Updating Database jobs has been successfully completed . Execution time: {end - start_time}")

@@ -1,4 +1,4 @@
-db = db.getSiblingDB('hexatone')
+db = db.getSiblingDB('webscrapper')
 db.createUser({
     user: 'admin',
     pwd: 'admin',

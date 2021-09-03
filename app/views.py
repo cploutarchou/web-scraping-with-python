@@ -16,7 +16,7 @@ logger = get_logger()
 @app.route('/')
 def index():
     context = {
-        "title": "Hexatone - Tables",
+        "title": "Web scrapper - Tables",
         "my_url": "https://christosploutarchou.com",
         "author": "Christos Ploutarchou",
         "copyright": f"© 2021 All rights reserved.",
@@ -32,7 +32,7 @@ def index():
 @app.route('/charts', methods=['GET', 'POST'])
 def charts():
     context = {
-        "title": "Hexatone",
+        "title": "Web scrapper",
         "my_url": "https://christosploutarchou.com",
         "author": "Christos Ploutarchou",
         "copyright": f"© 2021 All rights reserved.",
@@ -48,7 +48,7 @@ def charts():
 def html_error(e):
     # defining function
     context = {
-        "title": "Hexatone - ERROR 404 ",
+        "title": "Web scrapper - ERROR 404 ",
         "my_url": "https://christosploutarchou.com",
         "author": "Christos Ploutarchou",
         "copyright": f"© 2021 All rights reserved.",
