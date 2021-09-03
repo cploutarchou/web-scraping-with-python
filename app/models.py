@@ -112,8 +112,8 @@ def get_all_data():
         client.__enter__()
         q_set = Posts.objects().as_pymongo()
         posts = [post for post in q_set._iter_results()]
-        client.__exit__()
         data = posts
+        client.__exit__()
         return data
     except errors.LookUpError as e:
         logger.error(f"Something went wrong. Error {e}")
@@ -152,4 +152,36 @@ def posts_perday():
         date_time_obj = datetime.datetime.strptime(i['date'], '%Y-%m-%d').date()
         if date_time_obj > week_ago:
             final_data.append({'date': i['date'], 'count': i['count']})
+    client.__exit__()
+    return final_data
+
+
+def most_common():
+    client.__enter__()
+    pipeline = [
+        {"$unwind": "$categories"},
+        {"$group": {"_id": "$categories", "count": {"$sum": 1}}},
+        {
+            "$group": {
+                "_id": "null",
+                "counts": {
+                    "$push": {
+                        "k": "$_id",
+                        "v": "$count"
+                    }
+                }
+            }
+        },
+        {
+            "$replaceRoot": {
+                "newRoot": {"$arrayToObject": "$counts"}
+            }
+        }
+    ]
+    final_data = []
+    data = Posts.objects().aggregate(pipeline=pipeline)
+    for i in data:
+        for key, val in i.items():
+            final_data.append({"tag": key, "count": val})
+    client.__exit__()
     return final_data

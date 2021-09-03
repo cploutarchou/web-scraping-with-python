@@ -13,14 +13,6 @@ from .common import get_logger
 logger = get_logger()
 
 
-@app.route('/update_data', methods=['POST'])
-def update_data():
-    if request.method == 'POST' and request.form.get('update_data', None) is not False:
-        print("test 12")
-        result = subprocess.check_output("python scraper.py", shell=True)
-        print(result)
-
-
 @app.route('/')
 def index():
     context = {
@@ -46,9 +38,10 @@ def charts():
         "copyright": f"© 2021 All rights reserved.",
 
     }
-    graphJSON = week_posts()
 
-    return render_template('charts.html', graphJSON=graphJSON, context=context)
+    graph_json = week_posts()
+    graph_tag = get_popular_tags()
+    return render_template('charts.html', graph_json=graph_json, graph_tag=graph_tag, context=context)
 
 
 @app.errorhandler(code_or_exception=404)
@@ -70,6 +63,18 @@ def week_posts():
     df = pd.DataFrame(models.posts_perday()).sort_values(by='date', ascending=True)
     fig = px.line(df, x='date', y="count", labels={
         "date": "Post date",
+        "count": "Number of questions",
+    })
+    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+    return graphJSON
+
+
+def get_popular_tags():
+    tag = models.most_common()
+    df = pd.DataFrame(tag)
+    df = df.nlargest(10, 'count')
+    fig = px.pie(df, values='count', names='tag', labels={
+        "tag": "Category Name",
         "count": "Number of questions",
     })
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
