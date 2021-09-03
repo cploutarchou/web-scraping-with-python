@@ -21,3 +21,4 @@ docker-compose exec -T mongodb sh -c "mongo -u admin -p admin < /scripts/init_db
 echo "###################################################"
 echo "#     mongodb servers successfully configured     #"
 echo "###################################################"
+docker-compose exec -T mongodb sh -c "python3 /app/scraper.py"

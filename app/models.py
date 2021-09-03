@@ -1,5 +1,7 @@
 import datetime
 import logging
+from operator import itemgetter
+
 import graypy
 from mongoengine import StringField, DateTimeField, Document, IntField, errors, connect, ListField
 
@@ -184,4 +186,14 @@ def most_common():
         for key, val in i.items():
             final_data.append({"tag": key, "count": val})
     client.__exit__()
+    return final_data
+
+
+def top_10_questions():
+    client.__enter__()
+    pipeline = [{"$sort": {"views": -1}}, {"$limit": 10}]
+    final_data = []
+    data = Posts.objects().aggregate(pipeline=pipeline)
+    for v in data:
+        final_data.append({'title': v['title'], 'count': v['views']})
     return final_data
