@@ -45,6 +45,10 @@ A cron job runs the scraper and updates the application database.
 
 * It is required to fetch more pages. You can update the passed parameters of method execute_job() from 10 to any other value between 10 and 1000. The file is located on app/scraper.py
 
-## Screenshots:
+## Screenshots
+
+### Dash
 ![dashboard](https://raw.githubusercontent.com/cploutarchou/web-scraping-with-python/master/assets/dashboard.jpeg)
+
+### Charts
 ![Charts](https://raw.githubusercontent.com/cploutarchou/web-scraping-with-python/master/assets/chart.jpeg)
